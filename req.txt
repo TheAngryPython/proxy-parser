@@ -1,0 +1,7 @@
+bs4
+lxml
+pyarmor
+argparse
+requests
+re
+pytransform
