@@ -16,3 +16,9 @@ optional arguments:
   -tl TL      TIMEOUT LIMIT
 
   --nooutput  TOGGLE OUTPUT
+
+  --check TOGGLE CHECK
+
+# Example
+
+python parser.py -pl 4 -ap all.txt -gp good.txt -s http://eth0.me -tl 2
