@@ -99,8 +99,8 @@ if chk and (prs.c == 'y' or ((input('CHECK PROXY [Y/N] (Y): ').lower() or 'y') =
                 return (False, rwww.elapsed.total_seconds())
         except requests.ConnectTimeout:
             return (False, -1)
-        except:
-            return (False, -2)
+        except Exception as e:
+            return (False, -2, str(e))
     good = []
     i = 1
     for pr in lst:
@@ -112,7 +112,7 @@ if chk and (prs.c == 'y' or ((input('CHECK PROXY [Y/N] (Y): ').lower() or 'y') =
                 good.append(pr)
                 print(f'GOOD PROXY (UPTIME {ch[1]}), ADDED')
             elif ch[1] == -2:
-                print('ERROR, NOT ADDED')
+                print('ERROR, NOT ADDED '+ch[2])
             elif ch[1] == -1:
                 print('TIMED OUT, NOT ADDED')
         except Exception as e:
