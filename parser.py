@@ -65,7 +65,7 @@ f.write(str(lst))
 f.close()
 ln = len(lst)
 site = prs.s or (input('SITE TO CHECK (http://eth0.me): ') or 'http://eth0.me')
-t = int(prs.tl or (input('timeout limit (2): '.upper()) or 2))
+t = float(prs.tl or (input('timeout limit (2): '.upper()) or 2))
 print(f'CHECKING START ({ln})')
 def proxy_check(proxy, timeout=2, site="http://eth0.me"):
     try:
