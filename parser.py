@@ -21,7 +21,7 @@ prs = parser.parse_args(argv)
 if prs.out:
     def print(*a,**k):
         pass
-if prs.c not in ['y', 'n']:
+if prs.c not in ['y', 'n', None]:
     print('check - y or n')
     exit(0)
 if prs.c == 'n':
