@@ -96,23 +96,26 @@ if chk and (prs.c == 'y' or ((input('CHECK PROXY [Y/N] (Y): ').lower() or 'y') =
             if rwww.status_code == 200:
                 return (True, rwww.elapsed.total_seconds())
             else:
-                pass
+                return (False, rwww.elapsed.total_seconds())
         except:
-            return (False)
+            return (False, -1)
     good = []
     i = 1
     for pr in lst:
-        try:
-            print('CHECKING', pr['type']+'://'+pr['ip']+':'+pr['port'], i, 'OF', ln, end='. ')
+        # try:
+        if True:
             ch = proxy_check(pr, timeout=t, site=site)
             if ch[0]:
+                print('CHECKING', pr['type']+'://'+pr['ip']+':'+pr['port'], i, 'OF', ln, end='. ')
                 pr['uptime'] = ch[1]
                 good.append(pr)
                 print(f'GOOD PROXY (UPTIME {ch[1]}), ADDED')
-            else:
+            elif ch[1] == -1:
+                print('CONNECT FAILED, NOT ADDED')
+            elif ch[1] > t:
                 print('TIMED OUT, NOT ADDED')
-        except Exception as e:
-            print('ERROR, SKIP', e)
+        # except Exception as e:
+        #     print('ERROR, SKIP', e)
         i += 1
     f = open(prs.gp or (input('SAVE GOOG PROXIES TO (good_proxies.txt): ') or 'good_proxies.txt'), 'w')
     # print(good)
