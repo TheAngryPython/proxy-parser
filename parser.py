@@ -5,13 +5,13 @@ try:
 except:
     print('try: pip3 install -r req.txt')
 parser = argparse.ArgumentParser(description='Proxy parser from http://foxtools.ru/Proxy, by @EgTer, channel @codepo')
-parser.add_argument('-pl', '--page_limit', action='store', dest='pl', help='PAGE LIMIT')
-parser.add_argument('-ap', '--all', action='store', dest='ap', help='SAVE ALL PROXIES')
-parser.add_argument('-gp', '--good', action='store', dest='gp', help='SAVE GOOD PROXIES')
-parser.add_argument('-s', '--site', action='store', dest='s', help='SITE TO CHECK')
-parser.add_argument('-tl', '--timeout', action='store', dest='tl', help='TIMEOUT LIMIT')
-parser.add_argument('-c', '--check', action='store', dest='c', help='TOGGLE CHECK y/n')
-parser.add_argument('-n', '--nooutput', action='store_const', const=True, dest='out', help='TOGGLE OUTPUT')
+parser.add_argument('-pl', '--page_limit', action='store', dest='pl', help='page load limit')
+parser.add_argument('-ap', '--all', action='store', dest='ap', help='save proxy in')
+parser.add_argument('-gp', '--good', action='store', dest='gp', help='save good proxy in')
+parser.add_argument('-s', '--site', action='store', dest='s', help='site to check')
+parser.add_argument('-tl', '--timeout', action='store', dest='tl', help='timeout limit')
+parser.add_argument('-c', '--check', action='store', dest='c', help='turn off proxy checking y/n')
+parser.add_argument('-n', '--nooutput', action='store_const', const=True, dest='out', help='turn off output')
 argv = sys.argv
 try:
     argv.remove(__file__)
@@ -30,13 +30,13 @@ else:
     chk = True
 print('by @EgTer, channel @codepo')
 lst = []
-for pg in range(1, int(prs.pl or input('PAGE LIMIT (4, see http://foxtools.ru/Proxy): ') or 4) + 1):
+for pg in range(1, int(prs.pl or input('page load limit (4, see http://foxtools.ru/Proxy): ') or 4) + 1):
     curri = pg
     if curri != 1:
         print('\b' * len(str(curri - 1)), end='', flush=True)
         print(curri, end='', flush=True)
     else:
-        print('GETTING PAGE', curri, end='', flush=True)
+        print('loading page', curri, end='', flush=True)
     r = requests.get("http://foxtools.ru/Proxy?page="+str(pg))
     types = ['http', 'https']
     soup = BeautifulSoup(r.text, 'lxml')
@@ -66,7 +66,7 @@ for pg in range(1, int(prs.pl or input('PAGE LIMIT (4, see http://foxtools.ru/Pr
             lst.append(curr)
 else:
     print('\b' * len(str(curri - 1)), end='', flush=True)
-    print('SUCCESS')
+    print('completed')
 
 while True:
     p = 0
@@ -82,14 +82,14 @@ while True:
     if p == 0:
         break
 
-f = open(prs.ap or (input('SAVE ALL PROXIES TO (all_proxies.txt): ') or 'all_proxies.txt'), 'w')
+f = open(prs.ap or (input('save proxy in (all_proxies.txt): ') or 'all_proxies.txt'), 'w')
 f.write(str(lst))
 f.close()
-if chk and (prs.c == 'y' or ((input('CHECK PROXY [Y/N] (Y): ').lower() or 'y') == 'y')):
+if chk and (prs.c == 'y' or ((input('check proxies? [Y/N] (Y): ').lower() or 'y') == 'y')):
     ln = len(lst)
-    site = prs.s or (input('SITE TO CHECK (http://eth0.me): ') or 'http://eth0.me')
-    t = float(prs.tl or (input('timeout limit (2): '.upper()) or 2))
-    print(f'CHECKING START ({ln})')
+    site = prs.s or (input('site to check (http://eth0.me): ') or 'http://eth0.me')
+    t = float(prs.tl or (input('timeout limit (2): ') or 2))
+    print(f'check started ({ln})')
     def proxy_check(proxy, timeout=2, site="http://eth0.me"):
         try:
             rwww = requests.get(site, timeout=timeout, proxies={proxy['type']: proxy['ip']+':'+proxy['port']})
@@ -105,23 +105,23 @@ if chk and (prs.c == 'y' or ((input('CHECK PROXY [Y/N] (Y): ').lower() or 'y') =
     i = 1
     for pr in lst:
         try:
-            ch = proxy_check(pr, timeout=t, site=site)
+            ch = proxy_check(pr, timeout=t, site=site.format(ip=str(pr['ip']), port=str(pr['port']), type=str(pr['type'])))
             if ch[0]:
-                print('CHECKING', pr['type']+'://'+pr['ip']+':'+pr['port'], i, 'OF', ln, end='. ')
+                print('check', pr['type']+'://'+pr['ip']+':'+pr['port'], i, 'in', ln, end='. ')
                 pr['uptime'] = ch[1]
                 good.append(pr)
-                print(f'GOOD PROXY (UPTIME {ch[1]}), ADDED')
+                print(f'good proxy (uptime {ch[1]}), added')
             elif ch[1] == -2:
-                print('ERROR, NOT ADDED '+ch[2])
+                print('error, not added', ch[2])
             elif ch[1] == -1:
-                print('TIMED OUT, NOT ADDED')
+                print('timed out, not added')
         except Exception as e:
-            print('ERROR, SKIP', e)
+            print('error, skip', e)
         i += 1
-    f = open(prs.gp or (input('SAVE GOOG PROXIES TO (good_proxies.txt): ') or 'good_proxies.txt'), 'w')
+    f = open(prs.gp or (input('keep good proxies in (good_proxies.txt): ') or 'good_proxies.txt'), 'w')
     # print(good)
     f.write(str(good))
     f.close()
-    print(f'END, TOTAL {len(good)} PROXIES.')
+    print(f'end, total {len(good)} proxies.')
 else:
-    print('END.')
+    print('end.')
