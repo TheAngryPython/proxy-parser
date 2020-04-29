@@ -1,7 +1,6 @@
 try:
-    import requests, re, argparse
+    import requests, re, argparse, sys, json
     from bs4 import BeautifulSoup
-    import sys
 except:
     print('try: pip3 install -r req.txt')
 parser = argparse.ArgumentParser(description='Proxy parser from http://foxtools.ru/Proxy, by @EgTer, channel @codepo')
@@ -83,7 +82,7 @@ while True:
         break
 
 f = open(prs.ap or (input('save proxy in (all_proxies.txt): ') or 'all_proxies.txt'), 'w')
-f.write(str(lst))
+f.write(json.dumps(lst))
 f.close()
 if chk and (prs.c == 'y' or ((input('check proxies? [Y/N] (Y): ').lower() or 'y') == 'y')):
     ln = len(lst)
@@ -120,7 +119,7 @@ if chk and (prs.c == 'y' or ((input('check proxies? [Y/N] (Y): ').lower() or 'y'
         i += 1
     f = open(prs.gp or (input('keep good proxies in (good_proxies.txt): ') or 'good_proxies.txt'), 'w')
     # print(good)
-    f.write(str(good))
+    f.write(json.dumps(good))
     f.close()
     print(f'end, total {len(good)} proxies.')
 else:
