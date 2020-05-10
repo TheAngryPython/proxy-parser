@@ -3,5 +3,4 @@ lxml
 pyarmor
 argparse
 requests
-re
 pytransform
